@@ -2,24 +2,77 @@ import 'package:fake_info/utils/colors_code_and_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../controller/data_get_controller.dart';
+
 class BottomSheetPage {
-  static Future<void> showBottomSheet() async {
+
+  final AllData allRandomData = Get.put(AllData()); // Get Data From Api
+
+  Future<void> showBottomSheet() async {
     // Countries list
-    List<String> countries = ['Select Country', 'Bangladesh', 'India', 'Pakistan', 'Nepal', 'Sri Lanka'];
-    List<String> shortName = ['', 'BD', 'IN', 'PK', 'NE', 'SL'];
+    List<String> countries = [
+      'Select Country',
+      'Australia',
+      'Brazil',
+      'Canada',
+      'Switzerland',
+      'Germany',
+      'Denmark',
+      'Spain',
+      'Finland',
+      'France',
+      'United Kingdom',
+      'Ireland',
+      'India',
+      'Iran',
+      'Mexico',
+      'Netherlands',
+      'Norway',
+      'New Zealand',
+      'Serbia',
+      'Turkey',
+      'Ukraine',
+      'United States'
+    ];
+    List<String> shortName = [
+      '',
+      'AU',
+      'BR',
+      'CA',
+      'CH',
+      'DE',
+      'DK',
+      'ES',
+      'FI',
+      'FR',
+      'GB',
+      'IE',
+      'IN',
+      'IR',
+      'MX',
+      'NL',
+      'NO',
+      'NZ',
+      'RS',
+      'TR',
+      'UA',
+      'US'
+    ];
 
     // Gender list
     List<String> genders = ['Select Gender', 'Male', 'Female'];
+    List<String> shortGenders = ['', 'male', 'female'];
 
-    // Variables to store the selected country, short name, and gender
-    String selectedCountry = countries[0]; // Default value is 'Select Country'
-    String selectedShortName = ''; // Initially empty since 'Select Country' has no short name
-    String selectedGender = genders[0]; // Default value is 'Select Gender'
+    // Reactive variables
+    var selectedCountry = 'Select Country'.obs;
+    var selectedShortName = ''.obs;
+    var selectedGender = 'Select Gender'.obs;
+    var selectedShortGender = "".obs;
 
     await Get.bottomSheet(
       Container(
         width: Get.width,
-        height: Get.height * .8,
+        height: Get.height * .4,
         decoration: BoxDecoration(
           color: ColorsCodeAndIcon.bottomSheetColor,
           borderRadius: BorderRadius.only(
@@ -40,11 +93,11 @@ class BottomSheetPage {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: Get.height * .02),
                 // Country Dropdown Button with full width and border
                 SizedBox(
                   width: double.infinity,
-                  child: DropdownButtonFormField<String>(
+                  child: Obx(() => DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -52,20 +105,16 @@ class BottomSheetPage {
                       contentPadding: EdgeInsets.symmetric(horizontal: 10),
                       prefixIcon: Icon(Icons.flag),
                     ),
-                    value: selectedCountry == '' ? null : selectedCountry,
+                    value: selectedCountry.value,
                     icon: Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
                     style: TextStyle(color: Colors.black),
                     onChanged: (String? newValue) {
                       if (newValue != null) {
-                        int selectedIndex = countries.indexOf(newValue); // Get the index of the selected country
-                        selectedCountry = newValue;
-                        selectedShortName = shortName[selectedIndex]; // Set the corresponding short name
-
-                        // Do something with the selected country and short name
-                        print("Selected Country: $selectedCountry");
-                        print("Selected Short Name: $selectedShortName");
+                        int selectedIndex = countries.indexOf(newValue);
+                        selectedCountry.value = newValue;
+                        selectedShortName.value = shortName[selectedIndex];
                       }
                     },
                     items: countries.map<DropdownMenuItem<String>>((String value) {
@@ -74,13 +123,13 @@ class BottomSheetPage {
                         child: Text(value),
                       );
                     }).toList(),
-                  ),
+                  )),
                 ),
-                SizedBox(height: 20),
+                SizedBox(height: Get.height * .02),
                 // Gender Dropdown Button with full width and border
                 SizedBox(
                   width: double.infinity,
-                  child: DropdownButtonFormField<String>(
+                  child: Obx(() => DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -88,17 +137,16 @@ class BottomSheetPage {
                       contentPadding: EdgeInsets.symmetric(horizontal: 10),
                       prefixIcon: Icon(Icons.person),
                     ),
-                    value: selectedGender == '' ? null : selectedGender,
+                    value: selectedGender.value,
                     icon: Icon(Icons.arrow_downward),
                     iconSize: 24,
                     elevation: 16,
                     style: TextStyle(color: Colors.black),
                     onChanged: (String? newValue) {
                       if (newValue != null) {
-                        selectedGender = newValue;
-
-                        // Do something with the selected gender
-                        print("Selected Gender: $selectedGender");
+                        int selectedIndex = genders.indexOf(newValue);
+                        selectedGender.value = newValue;
+                        selectedShortGender.value = shortGenders[selectedIndex];
                       }
                     },
                     items: genders.map<DropdownMenuItem<String>>((String value) {
@@ -107,15 +155,31 @@ class BottomSheetPage {
                         child: Text(value),
                       );
                     }).toList(),
-                  ),
+                  )),
                 ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    // Close the bottom sheet
+                SizedBox(height: Get.height * .03),
+                GestureDetector(
+                  onTap: () async{
+                    await allRandomData.getApiData(
+                        selectedShortName.value, selectedShortGender.value);
                     Get.back();
+                    print(allRandomData.randomData);
                   },
-                  child: Text('Close'),
+                  child: Container(
+                    height: Get.height * .07,
+                    width: Get.width,
+                    decoration: BoxDecoration(
+                      color: ColorsCodeAndIcon.appbarColor,
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    child: Center(
+                      child: Text("Search", style: TextStyle(
+                          color: ColorsCodeAndIcon.textColor,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600
+                      )),
+                    ),
+                  ),
                 ),
               ],
             ),

@@ -12,4 +12,7 @@ class ColorsCodeAndIcon{
   //Icons
   static const searchIcon = "assets/search icon.png";
 
+  //Profile Image
+  static const profileImg = "assets/Profile Pic.png";
+
 }
