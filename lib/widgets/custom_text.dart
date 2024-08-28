@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 Text CustomText(String text){
   return Text(
     text,
-    style: GoogleFonts.roboto(
+    style: TextStyle(
+      fontFamily: "Roboto",
       fontSize: 14,
       fontWeight: FontWeight.w600
     ),

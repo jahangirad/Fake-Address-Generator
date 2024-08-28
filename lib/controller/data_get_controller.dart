@@ -5,8 +5,11 @@ import 'package:http/http.dart' as http;
 
 class AllData extends GetxController {
   RxList<GetRendomData> randomData = <GetRendomData>[].obs;
+  RxBool isLoading = false.obs; // Progress indicator tracking
 
   Future<RxList<GetRendomData>> getApiData(String selectedCountryShortName, String selectedGender) async {
+    isLoading.value = true; // Start loading
+
     final response = await http.get(
         Uri.parse('https://randomuser.me/api/1.4/?nat=$selectedCountryShortName&gender=$selectedGender'));
 
@@ -23,10 +26,9 @@ class AllData extends GetxController {
       for (var item in results) {
         randomData.add(GetRendomData.fromJson(item));
       }
-
-      return randomData;
-    } else {
-      return randomData;
     }
+
+    isLoading.value = false; // Stop loading
+    return randomData;
   }
 }

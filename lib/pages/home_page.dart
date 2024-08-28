@@ -1,7 +1,8 @@
 import 'package:fake_info/utils/colors_code_and_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import '../controller/banner_ads_controller.dart';
 import '../controller/data_get_controller.dart';
 import '../widgets/custom_text.dart';
 import 'bottom_sheet.dart';
@@ -13,15 +14,17 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final BottomSheetPage bottomSheetPage = BottomSheetPage();
     final AllData getRandomAllData = Get.put(AllData());
+    final BannerAdController bannerAdController = Get.find();
 
     return Scaffold(
       appBar: AppBar(
         title: Text(
           "FakeInfo",
-          style: GoogleFonts.greatVibes(
+          style: TextStyle(
+            fontFamily: "GreatVibes",
             fontSize: 25,
             fontWeight: FontWeight.w700,
-            color: ColorsCodeAndIcon.textColor,
+            color: ColorsCodeAndIcon.textColor
           ),
         ),
         backgroundColor: ColorsCodeAndIcon.appbarColor,
@@ -61,7 +64,7 @@ class HomePage extends StatelessWidget {
                           ? NetworkImage(userData.picture.thumbnail)
                           : AssetImage(ColorsCodeAndIcon.profileImg) as ImageProvider,
                     ),
-                    SizedBox(width: Get.width * .03,),
+                    SizedBox(width: 10),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -83,7 +86,7 @@ class HomePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: Get.height * .02,),
+                        SizedBox(height: 8),
                         Row(
                           children: [
                             SizedBox(
@@ -102,7 +105,7 @@ class HomePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: Get.height * .02,),
+                        SizedBox(height: 8),
                         Row(
                           children: [
                             SizedBox(
@@ -121,7 +124,7 @@ class HomePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: Get.height * .02,),
+                        SizedBox(height: 8),
                         Row(
                           children: [
                             SizedBox(
@@ -140,7 +143,7 @@ class HomePage extends StatelessWidget {
                             ),
                           ],
                         ),
-                        SizedBox(height: Get.height * .02,),
+                        SizedBox(height: 8),
                         Row(
                           children: [
                             SizedBox(
@@ -163,14 +166,16 @@ class HomePage extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: Get.height * .03,),
+                SizedBox(height: 30),
                 Text(
-                  "Address", style: GoogleFonts.roboto(
+                  "Address",
+                  style: TextStyle(
+                    fontFamily: "Roboto",
                     fontSize: 20,
                     fontWeight: FontWeight.w700
                   ),
                 ),
-                SizedBox(height: Get.height * .03,),
+                SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -193,7 +198,7 @@ class HomePage extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: Get.height * .02,),
+                SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -216,7 +221,7 @@ class HomePage extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: Get.height * .02,),
+                SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -239,7 +244,7 @@ class HomePage extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: Get.height * .02,),
+                SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -262,7 +267,7 @@ class HomePage extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: Get.height * .02,),
+                SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -285,7 +290,7 @@ class HomePage extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: Get.height * .02,),
+                SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -308,7 +313,7 @@ class HomePage extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: Get.height * .02,),
+                SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -331,7 +336,7 @@ class HomePage extends StatelessWidget {
                     )
                   ],
                 ),
-                SizedBox(height: Get.height * .02,),
+                SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -354,6 +359,28 @@ class HomePage extends StatelessWidget {
                     )
                   ],
                 ),
+                SizedBox(height: 20),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Obx((){
+                    var userData = getRandomAllData.randomData.isNotEmpty
+                        ? getRandomAllData.randomData[0]
+                        : null;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // ... অন্যান্য UI অংশগুলো অপরিবর্তিত থাকুক
+                        SizedBox(height: 20),
+                        if (bannerAdController.isAdLoaded.value)
+                          Container(
+                            width: bannerAdController.bannerAd!.size.width.toDouble(),
+                            height: bannerAdController.bannerAd!.size.height.toDouble(),
+                            child: AdWidget(ad: bannerAdController.bannerAd!),
+                          ),
+                      ],
+                    );
+                  }),
+                )
               ],
             );
           }),

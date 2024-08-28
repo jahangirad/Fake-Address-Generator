@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../controller/data_get_controller.dart';
+import '../controller/rewarded_ads_controller.dart';
 
 class BottomSheetPage {
 
   final AllData allRandomData = Get.put(AllData()); // Get Data From Api
+  final RewardedAdController rewardedAdController = Get.find(); // Get ads from google admob
 
   Future<void> showBottomSheet() async {
     // Countries list
@@ -93,7 +95,7 @@ class BottomSheetPage {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: Get.height * .02),
+                SizedBox(height: 10),
                 // Country Dropdown Button with full width and border
                 SizedBox(
                   width: double.infinity,
@@ -125,7 +127,7 @@ class BottomSheetPage {
                     }).toList(),
                   )),
                 ),
-                SizedBox(height: Get.height * .02),
+                SizedBox(height: 8),
                 // Gender Dropdown Button with full width and border
                 SizedBox(
                   width: double.infinity,
@@ -157,15 +159,30 @@ class BottomSheetPage {
                     }).toList(),
                   )),
                 ),
-                SizedBox(height: Get.height * .03),
+                SizedBox(height: 10),
                 GestureDetector(
-                  onTap: () async{
-                    await allRandomData.getApiData(
-                        selectedShortName.value, selectedShortGender.value);
-                    Get.back();
-                    print(allRandomData.randomData);
+                  onTap: () async {
+                    // লোডিং দেখানোর জন্য একটি ভেরিয়েবল ব্যবহার করতে পারেন
+                    bool adShown = false;
+
+                    // রিওয়ার্ডেড অ্যাড শো করার চেষ্টা করুন
+                    rewardedAdController.showRewardedAd();
+
+                    // কিছুক্ষণ পরে আবার অ্যাড শো না হলে fallback হিসেবে কিছু অন্য UI দেখাতে পারেন
+                    if (!adShown) {
+                      await allRandomData.getApiData(
+                          selectedShortName.value, selectedShortGender.value);
+                      Get.back();
+                    }
                   },
-                  child: Container(
+                  child: Obx(() => allRandomData.isLoading.value
+                      ? Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                          ColorsCodeAndIcon.appbarColor),
+                    ),
+                  )
+                      : Container(
                     height: Get.height * .07,
                     width: Get.width,
                     decoration: BoxDecoration(
@@ -173,14 +190,14 @@ class BottomSheetPage {
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
                     child: Center(
-                      child: Text("Search", style: TextStyle(
-                          color: ColorsCodeAndIcon.textColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600
-                      )),
+                      child: Text("Search",
+                          style: TextStyle(
+                              color: ColorsCodeAndIcon.textColor,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600)),
                     ),
-                  ),
-                ),
+                  )),
+                )
               ],
             ),
           ),
