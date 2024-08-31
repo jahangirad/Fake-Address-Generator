@@ -6,7 +6,6 @@ import '../controller/data_get_controller.dart';
 import '../controller/rewarded_ads_controller.dart';
 
 class BottomSheetPage {
-
   final AllData allRandomData = Get.put(AllData()); // Get Data From Api
   final RewardedAdController rewardedAdController = Get.find(); // Get ads from google admob
 
@@ -73,8 +72,8 @@ class BottomSheetPage {
 
     await Get.bottomSheet(
       Container(
-        width: Get.width,
-        height: Get.height * .4,
+        width: Get.width, // Adjust width as needed
+        height: Get.height * 0.4, // Adjust height as needed
         decoration: BoxDecoration(
           color: ColorsCodeAndIcon.bottomSheetColor,
           borderRadius: BorderRadius.only(
@@ -97,9 +96,9 @@ class BottomSheetPage {
                 ),
                 SizedBox(height: 10),
                 // Country Dropdown Button with full width and border
-                SizedBox(
-                  width: double.infinity,
-                  child: Obx(() => DropdownButtonFormField<String>(
+                Obx(() => SizedBox(
+                  width: Get.width, // Adjust width as needed
+                  child: DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -125,13 +124,13 @@ class BottomSheetPage {
                         child: Text(value),
                       );
                     }).toList(),
-                  )),
-                ),
+                  ),
+                )),
                 SizedBox(height: 8),
                 // Gender Dropdown Button with full width and border
-                SizedBox(
-                  width: double.infinity,
-                  child: Obx(() => DropdownButtonFormField<String>(
+                Obx(() => SizedBox(
+                  width: Get.width, // Adjust width as needed
+                  child: DropdownButtonFormField<String>(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -157,12 +156,11 @@ class BottomSheetPage {
                         child: Text(value),
                       );
                     }).toList(),
-                  )),
-                ),
+                  ),
+                )),
                 SizedBox(height: 10),
                 GestureDetector(
                   onTap: () async {
-                    // লোডিং দেখানোর জন্য একটি ভেরিয়েবল ব্যবহার করতে পারেন
                     bool adShown = false;
 
                     // রিওয়ার্ডেড অ্যাড শো করার চেষ্টা করুন
@@ -184,7 +182,7 @@ class BottomSheetPage {
                   )
                       : Container(
                     height: Get.height * .07,
-                    width: Get.width,
+                    width: Get.width, // Adjust width as needed
                     decoration: BoxDecoration(
                       color: ColorsCodeAndIcon.appbarColor,
                       borderRadius: BorderRadius.all(Radius.circular(20)),

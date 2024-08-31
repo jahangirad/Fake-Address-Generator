@@ -1,8 +1,6 @@
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-
-
 class BannerAdController extends GetxController {
   BannerAd? _bannerAd;
   RxBool isAdLoaded = false.obs;
@@ -10,6 +8,14 @@ class BannerAdController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+
+    // ANDROID ID সংগ্রহ বন্ধ করা এবং শিশুদের জন্য উপযুক্ত বিজ্ঞাপন সেটিং করা
+    RequestConfiguration requestConfiguration = RequestConfiguration(
+      tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+      tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes,
+    );
+    MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+
     loadBannerAd();
   }
 
@@ -39,5 +45,3 @@ class BannerAdController extends GetxController {
     super.onClose();
   }
 }
-
-

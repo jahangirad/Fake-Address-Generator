@@ -1,21 +1,27 @@
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-
-
 class AppOpenAdController extends GetxController {
   AppOpenAd? _appOpenAd;
   bool isAdLoaded = false;
-  bool hasShownAd = false; // নতুন ভেরিয়েবল যোগ করা হয়েছে
+  bool hasShownAd = false;
 
   @override
   void onInit() {
     super.onInit();
+
+    // ANDROID ID সংগ্রহ বন্ধ করা এবং শিশুদের জন্য উপযুক্ত বিজ্ঞাপন সেটিং করা
+    RequestConfiguration requestConfiguration = RequestConfiguration(
+      tagForChildDirectedTreatment: TagForChildDirectedTreatment.yes,
+      tagForUnderAgeOfConsent: TagForUnderAgeOfConsent.yes,
+    );
+    MobileAds.instance.updateRequestConfiguration(requestConfiguration);
+
     loadAppOpenAd();
   }
 
   void loadAppOpenAd() {
-    if (!hasShownAd) { // যদি অ্যাড আগে না দেখানো হয়ে থাকে
+    if (!hasShownAd) {
       AppOpenAd.load(
         adUnitId: 'ca-app-pub-8384631143651720/9201289591',
         request: AdRequest(),
@@ -41,7 +47,7 @@ class AppOpenAdController extends GetxController {
         onAdDismissedFullScreenContent: (ad) {
           ad.dispose();
           isAdLoaded = false;
-          hasShownAd = true; // অ্যাড দেখানো হয়েছে এটা সেট করা হচ্ছে
+          hasShownAd = true;
           print("App Open Ad Dismissed");
         },
         onAdFailedToShowFullScreenContent: (ad, error) {
@@ -62,6 +68,3 @@ class AppOpenAdController extends GetxController {
     super.onClose();
   }
 }
-
-
-
